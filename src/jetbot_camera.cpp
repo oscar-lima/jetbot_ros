@@ -26,13 +26,12 @@
 #include <sensor_msgs/image_encodings.h>
 
 #include <jetson-utils/gstCamera.h>
-
+#include <jetson-utils/videoOptions.h>
 #include "image_converter.h"
 
-
-
-// globals	
+// globals
 gstCamera* camera = NULL;
+videoOptions video_options;
 
 imageConverter* camera_cvt = NULL;
 ros::Publisher* camera_pub = NULL;
@@ -69,6 +68,7 @@ bool aquireFrame()
 	// publish the message
 	camera_pub->publish(msg);
 	ROS_INFO("published camera frame");
+
 	return true;
 }
 
@@ -77,7 +77,7 @@ bool aquireFrame()
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "jetbot_camera");
- 
+
 	ros::NodeHandle nh;
 	ros::NodeHandle private_nh("~");
 
@@ -87,14 +87,32 @@ int main(int argc, char **argv)
 	std::string camera_device = "0";	// MIPI CSI camera by default
 
 	private_nh.param<std::string>("device", camera_device, camera_device);
-	
+
 	ROS_INFO("opening camera device %s", camera_device.c_str());
 
-	
 	/*
 	 * open camera device
 	 */
-	camera = gstCamera::Create(camera_device.c_str());
+	videoOptions mOptions;
+	mOptions.width = 1280;
+	mOptions.height = 720;
+	mOptions.frameRate = 30.0;
+	mOptions.bitRate = 0;
+	mOptions.numBuffers = 4;
+	mOptions.loop = 0;
+	mOptions.rtspLatency = 2000;
+	mOptions.zeroCopy = 0;
+	mOptions.ioType = videoOptions::IoType::INPUT;
+	mOptions.deviceType = videoOptions::DeviceType::DEVICE_CSI;
+	mOptions.flipMethod = videoOptions::FlipMethod::FLIP_HORIZONTAL;
+	mOptions.codec = videoOptions::Codec::CODEC_RAW;
+
+	mOptions.resource.string = "csi://0";
+	mOptions.resource.protocol = "csi";
+	mOptions.resource.location = "0";
+	mOptions.resource.port = 0;
+
+	camera = gstCamera::Create(mOptions);
 
 	if( !camera )
 	{
