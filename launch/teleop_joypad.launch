@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- jetbot waveshare gamepad driver -->
+  <node pkg="joy" type="joy_node" name="joy" >
+    <param name="dev_name" value="ShanWan PC/PS3/Android" />
+    <param name="deadzone" value="0.05" />
+    <param name="autorepeat_rate" value="40" />
+    <param name="coalesce_interval" value="0.025" />
+  </node>
+
+</launch>
