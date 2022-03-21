@@ -31,3 +31,24 @@ This is work in progress and not yet ported to noetic but is comming soon ; )
 ### Test Teleop
 
 This is work in progress and not yet ported to noetic but is comming soon ; )
+
+jetbot gamepad
+
+from: http://underpop.online.fr/2/2-4ghz-wireless-gamepad-controller-joystick-for-pc-raspberry-pi-retropie-android-smart-tv-box-tablet-pc-ps3-nespi-case-2-pcs/
+the name of the gamepad is:
+
+    GeeekStudio 2.4G Wireless Gamepad Game
+
+The joypad is recognized as a generic Linux joystick, therefore http://wiki.ros.org/joy can be used.
+
+Once you plug in the USB receiver it will show in the system like:
+
+    ls /dev/input/js0
+
+or
+
+    ls /dev/input/js*
+
+Then simply launch it with:
+
+    roslaunch jetbot_ros teleop_joypad.launch
